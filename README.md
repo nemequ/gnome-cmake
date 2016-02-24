@@ -1,39 +1,50 @@
-# CMake modules for GNOME support
+# CMake modules for GNOME libraries and tools
 
 This is a collection of CMake modules to support using GNOME libraries
-from CMake-based projects.  These modules were initially intended for
-use from Vala projects, but many can be used for other languages as
-well.
+and tools from CMake-based projects.  These modules were initially
+intended for use from Vala projects, but many can be used for other
+languages as well.
 
-Components include:
+Components currently include:
 
- * FindVala — Vala support
+ * FindVala — [Vala](https://wiki.gnome.org/Projects/Vala) support.
    * Functions/Macros:
      * `vala_precompile_target`: Compile Vala to C and generate
        supporting files (such as headers, VAPIs, and GObject
        Introspection repositories).
-   * Imported targets:
-     * valac (executable)
- * FindGObjectIntrospection — GObject Introspection support
+   * Imported executables:
+     * valac executable
+ * FindGObjectIntrospection —
+   [GObject Introspection](https://wiki.gnome.org/Projects/GObjectIntrospection)
+   support.
    * Functions/Macros:
      * `gobject_introspection_compile` — Compile a GObject
        Introspection Repository (GIR) to a typelib.
-   * Imported targets:
-     * g-ir-compiler (executable)
-     * g-ir-scanner (executable)
+   * Imported executables:
+     * g-ir-compiler
+     * g-ir-scanner
  * FindGLib — GLib/GObject/GIO support
    * Functions/Macros:
-     * `glib_compile_resources` — Compile GResources
-   * Imported targets:
-     * glib-2.0 (library)
-     * gobject-2.0 (library)
-	 * gio-2.0 (library)
-     * glib-genmarshal (executable)
-     * glib-mkenums (executable)
-	 * glib-compile-schemas (executable)
-	 * glib-compile-resources (executable)
+     * `glib_compile_resources` — Compile
+       [GResource](https://developer.gnome.org/gio/stable/GResource.html#GResource.description)s
+   * Imported libraries:
+     * glib-2.0
+     * gobject-2.0
+     * gio-2.0
+   * Imported executables:
+     * glib-genmarshal
+     * glib-mkenums
+     * glib-compile-schemas
+     * glib-compile-resources
  * FindValadoc — [Valadoc](https://wiki.gnome.org/Projects/Valadoc) support
    * Functions/Macros:
      * `valadoc_generate` — Generate documentation
-   * Imported targets:
-     * valadoc (executable)
+   * Imported executables:
+     * valadoc
+
+There are still a lot of functions and modules which need writing.
+For a list of planned features, see the
+[issue tracker](https://github.com/nemequ/gnome-cmake/issues).  If you
+end up writing a module, function, macro, etc. which you feel would be
+useful, please consider submitting it for inclusion in this
+repository.
