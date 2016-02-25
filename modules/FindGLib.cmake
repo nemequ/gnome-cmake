@@ -138,7 +138,7 @@ function(glib_install_schemas)
   foreach(schema ${GSCHEMA_UNPARSED_ARGUMENTS})
     get_filename_component(schema_name "${schema}" NAME)
     string(REGEX REPLACE "^(.+)\.gschema.xml$" "\\1" schema_name "${schema_name}")
-    set(schema_output "${CMAKE_CURRENT_BINARY_DIR}/${schema_name}.gschema.xml")
+    set(schema_output "${CMAKE_CURRENT_BINARY_DIR}/${schema_name}.gschema.xml.valid")
 
     add_custom_command(
       OUTPUT "${schema_output}"
@@ -146,7 +146,7 @@ function(glib_install_schemas)
         --strict
         --dry-run
         --schema-file="${schema}"
-      COMMAND "${CMAKE_COMMAND}" ARGS -E copy "${schema}" "${schema_output}"
+      COMMAND "${CMAKE_COMMAND}" ARGS -E touch "${schema_output}"
       DEPENDS "${schema}"
       WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
       COMMENT "Validating ${schema}")
@@ -154,8 +154,14 @@ function(glib_install_schemas)
     add_custom_target("gsettings-schema-${schema_name}" ALL
       DEPENDS "${schema_output}")
 
+    if(CMAKE_INSTALL_FULL_DATADIR)
+      set(SCHEMADIR "${CMAKE_INSTALL_FULL_DATADIR}/glib-2.0/schemas")
+    else()
+      set(SCHEMADIR "${CMAKE_INSTALL_PREFIX}/share/glib-2.0/schemas")
+    endif()
     install(FILES "${schema}"
-      DESTINATION "${CMAKE_INSTALL_DATADIR}/glib-2.0/schemas")
+      DESTINATION "${SCHEMADIR}")
+    install(CODE "execute_process(COMMAND \"${GLIB_COMPILE_SCHEMAS}\" \"${SCHEMADIR}\")")
   endforeach()
 endfunction()
 
@@ -175,7 +181,7 @@ function(glib_compile_resources SPEC_FILE)
   unset (multiValueArgs)
 
   if(NOT GLIB_COMPILE_RESOURCES_SOURCE_DIR)
-    set(GLIB_COMPILE_RESOURCES_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+    set(GLIB_COMPILE_RESOURCES_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
   endif()
 
   set(FLAGS)
@@ -210,6 +216,7 @@ function(glib_compile_resources SPEC_FILE)
         --target "${GLIB_COMPILE_RESOURCES_HEADER}"
         ${FLAGS}
         "${SPEC_FILE}"
+      DEPENDS "${SPEC_FILE}" ${deps}
       WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
   endif()
 
@@ -224,6 +231,7 @@ function(glib_compile_resources SPEC_FILE)
         --target "${GLIB_COMPILE_RESOURCES_SOURCE}"
         ${FLAGS}
         "${SPEC_FILE}"
+      DEPENDS "${SPEC_FILE}" ${deps}
       WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
   endif()
 endfunction()
