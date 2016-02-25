@@ -121,6 +121,44 @@ if(GLIB_COMPILE_SCHEMAS)
   set_property(TARGET glib-compile-schemas PROPERTY IMPORTED_LOCATION "${GLIB_COMPILE_SCHEMAS}")
 endif()
 
+# glib_install_schemas(
+#   [DESTINATION directory]
+#   schemas…)
+#
+# Validate and install the listed schemas.
+function(glib_install_schemas)
+  set (options)
+  set (oneValueArgs DESTINATION)
+  set (multiValueArgs)
+  cmake_parse_arguments(GSCHEMA "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+  unset (options)
+  unset (oneValueArgs)
+  unset (multiValueArgs)
+
+  foreach(schema ${GSCHEMA_UNPARSED_ARGUMENTS})
+    get_filename_component(schema_name "${schema}" NAME)
+    string(REGEX REPLACE "^(.+)\.gschema.xml$" "\\1" schema_name "${schema_name}")
+    set(schema_output "${CMAKE_CURRENT_BINARY_DIR}/${schema_name}.gschema.xml")
+
+    add_custom_command(
+      OUTPUT "${schema_output}"
+      COMMAND glib-compile-schemas
+        --strict
+        --dry-run
+        --schema-file="${schema}"
+      COMMAND "${CMAKE_COMMAND}" ARGS -E copy "${schema}" "${schema_output}"
+      DEPENDS "${schema}"
+      WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+      COMMENT "Validating ${schema}")
+
+    add_custom_target("gsettings-schema-${schema_name}" ALL
+      DEPENDS "${schema_output}")
+
+    install(FILES "${schema}"
+      DESTINATION "${CMAKE_INSTALL_DATADIR}/glib-2.0/schemas")
+  endforeach()
+endfunction()
+
 find_program(GLIB_COMPILE_RESOURCES glib-compile-resources)
 if(GLIB_COMPILE_RESOURCES)
   add_executable(glib-compile-resources IMPORTED)

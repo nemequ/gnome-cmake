@@ -27,6 +27,9 @@ Components currently include:
    * Functions/Macros:
      * `glib_compile_resources` — Compile
        [GResource](https://developer.gnome.org/gio/stable/GResource.html#GResource.description)s
+     * `glib_install_schemas` — Validate and install
+       [GSettings](https://developer.gnome.org/gio/stable/GSettings.html)s
+       schema.
    * Imported libraries:
      * glib-2.0
      * gobject-2.0
