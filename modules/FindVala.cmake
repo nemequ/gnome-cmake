@@ -159,8 +159,9 @@ endmacro()
 # Options:
 #
 #   TARGET
-#     Name of the target you're generating; it's generally best to make
-#     this the same as your executable or library target name, but not
+#     Target to create; it's generally best to make this similar to
+#     your executable or library target name (e.g., for a "foo"
+#     executable, "foo-vala" might be a good name), but not
 #     technically required.
 #   GENERATED_SOURCES
 #     Variable in which to store the list of generated sources (which
@@ -260,7 +261,7 @@ macro(vala_precompile_target TARGET GENERATED_SOURCES)
   endif()
 
   # Where to put the output
-  set(TARGET_DIR "${CMAKE_CURRENT_BINARY_DIR}/${TARGET}-vala")
+  set(TARGET_DIR "${CMAKE_CURRENT_BINARY_DIR}/${TARGET}")
 
   set(FAST_VAPI_STAMPS)
 
@@ -388,7 +389,7 @@ macro(vala_precompile_target TARGET GENERATED_SOURCES)
 
   # CMake doesn't allow file-level dependencies across directories, so
   # we provide a target we can depend on from other directories.
-  add_custom_target("${TARGET}-vala"
+  add_custom_target("${TARGET}"
     DEPENDS
       "${TARGET_DIR}/stamp"
       ${non_source_out_files}
