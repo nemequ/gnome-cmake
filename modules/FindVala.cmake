@@ -238,6 +238,7 @@ macro(vala_precompile_target TARGET GENERATED_SOURCES)
     elseif(
         "c"   STREQUAL "${type}" OR
         "h"   STREQUAL "${type}" OR
+        "cc"  STREQUAL "${type}" OR
         "cpp" STREQUAL "${type}" OR
         "cxx" STREQUAL "${type}" OR
         "hpp" STREQUAL "${type}")
