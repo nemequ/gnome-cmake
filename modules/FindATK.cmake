@@ -77,6 +77,7 @@ endforeach(atk_dep)
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(ATK
     REQUIRED_VARS
+      ATK_LIBRARY
       ATK_INCLUDE_DIRS
       ${ATK_DEPS_FOUND_VARS}
     VERSION_VAR

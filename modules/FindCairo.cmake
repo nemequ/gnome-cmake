@@ -78,6 +78,7 @@ endforeach(cairo_dep)
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(Cairo
     REQUIRED_VARS
+      Cairo_LIBRARY
       Cairo_INCLUDE_DIRS
       ${Cairo_DEPS_FOUND_VARS}
     VERSION_VAR

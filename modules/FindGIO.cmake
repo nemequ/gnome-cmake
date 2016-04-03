@@ -188,6 +188,7 @@ endif()
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(GIO
     REQUIRED_VARS
+      GIO_LIBRARY
       GIO_INCLUDE_DIRS
       ${GIO_DEPS_FOUND_VARS}
     VERSION_VAR

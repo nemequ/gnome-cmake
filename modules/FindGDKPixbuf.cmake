@@ -71,6 +71,7 @@ endforeach(gdkpixbuf_dep)
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(GDKPixbuf
     REQUIRED_VARS
+      GDKPixbuf_LIBRARY
       GDKPixbuf_INCLUDE_DIRS
       ${GDKPixbuf_DEPS_FOUND_VARS}
     VERSION_VAR

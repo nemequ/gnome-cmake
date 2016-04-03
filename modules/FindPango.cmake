@@ -77,6 +77,7 @@ endforeach(pango_dep)
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(Pango
     REQUIRED_VARS
+      Pango_LIBRARY
       Pango_INCLUDE_DIRS
       ${Pango_DEPS_FOUND_VARS}
     VERSION_VAR

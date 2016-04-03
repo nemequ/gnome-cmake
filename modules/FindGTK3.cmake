@@ -84,6 +84,7 @@ endforeach(gtk3_dep)
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(GTK3
     REQUIRED_VARS
+      GTK3_LIBRARY
       GTK3_INCLUDE_DIRS
       ${GTK3_DEPS_FOUND_VARS}
     VERSION_VAR

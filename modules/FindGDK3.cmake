@@ -79,6 +79,7 @@ endforeach(gdk3_dep)
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(GDK3
     REQUIRED_VARS
+      GDK3_LIBRARY
       GDK3_INCLUDE_DIRS
       ${GDK3_DEPS_FOUND_VARS}
     VERSION_VAR

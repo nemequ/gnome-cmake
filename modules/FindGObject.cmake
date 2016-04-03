@@ -72,6 +72,7 @@ endif()
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(GObject
     REQUIRED_VARS
+      GObject_LIBRARY
       GObject_INCLUDE_DIRS
       ${GObject_DEPS_FOUND_VARS}
     VERSION_VAR

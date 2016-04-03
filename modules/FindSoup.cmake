@@ -77,6 +77,7 @@ endforeach(soup_dep)
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(Soup
     REQUIRED_VARS
+      Soup_LIBRARY
       Soup_INCLUDE_DIRS
       ${Soup_DEPS_FOUND_VARS}
     VERSION_VAR
