@@ -36,11 +36,12 @@ if(PKG_CONFIG_FOUND)
   pkg_search_module(ATK_PKG atk)
 endif()
 
-find_library(ATK atk-1.0 HINTS ${ATK_PKG_LIBRARY_DIRS})
+find_library(ATK_LIBRARY atk-1.0 HINTS ${ATK_PKG_LIBRARY_DIRS})
+set(ATK "atk-1.0")
 
-if(ATK AND NOT ATK_FOUND)
-  add_library(atk-1.0 SHARED IMPORTED)
-  set_property(TARGET atk-1.0 PROPERTY IMPORTED_LOCATION "${ATK}")
+if(ATK_LIBRARY AND NOT ATK_FOUND)
+  add_library(${ATK} SHARED IMPORTED)
+  set_property(TARGET ${ATK} PROPERTY IMPORTED_LOCATION "${ATK_LIBRARY}")
 
   find_path(ATK_INCLUDE_DIR "atk/atk.h"
     HINTS ${ATK_PKG_INCLUDE_DIRS})
@@ -68,7 +69,7 @@ foreach(atk_dep ${ATK_DEPS})
   list(APPEND ATK_DEPS_FOUND_VARS "${atk_dep}_FOUND")
   list(APPEND ATK_INCLUDE_DIRS ${${atk_dep}_INCLUDE_DIRS})
 
-  set_property (TARGET "atk-1.0" APPEND PROPERTY INTERFACE_LINK_LIBRARIES "${${atk_dep}}")
+  set_property (TARGET "${ATK}" APPEND PROPERTY INTERFACE_LINK_LIBRARIES "${${atk_dep}}")
 endforeach(atk_dep)
 
 include(FindPackageHandleStandardArgs)

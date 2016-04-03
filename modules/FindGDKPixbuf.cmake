@@ -36,11 +36,12 @@ if(PKG_CONFIG_FOUND)
   pkg_search_module(GDKPixbuf_PKG gdk-pixbuf-2.0)
 endif()
 
-find_library(GDKPixbuf gdk_pixbuf-2.0 HINTS ${GDKPixbuf_PKG_LIBRARY_DIRS})
+find_library(GDKPixbuf_LIBRARY gdk_pixbuf-2.0 HINTS ${GDKPixbuf_PKG_LIBRARY_DIRS})
+set(GDKPixbuf "gdk_pixbuf-2.0")
 
-if(GDKPixbuf)
-  add_library(gdk_pixbuf-2.0 SHARED IMPORTED)
-  set_property(TARGET gdk_pixbuf-2.0 PROPERTY IMPORTED_LOCATION "${GDKPixbuf}")
+if(GDKPixbuf_LIBRARY)
+  add_library(${GDKPixbuf} SHARED IMPORTED)
+  set_property(TARGET ${GDKPixbuf} PROPERTY IMPORTED_LOCATION "${GDKPixbuf_LIBRARY}")
 
   set(GDKPixbuf_INCLUDE_DIRS)
 
@@ -62,7 +63,7 @@ foreach(gdkpixbuf_dep ${GDKPixbuf_DEPS})
   list(APPEND GDKPixbuf_DEPS_FOUND_VARS "${gdkpixbuf_dep}_FOUND")
   list(APPEND GDKPixbuf_INCLUDE_DIRS ${${gdkpixbuf_dep}_INCLUDE_DIRS})
 
-  set_property (TARGET "gdk_pixbuf-2.0" APPEND PROPERTY INTERFACE_LINK_LIBRARIES "${${gdkpixbuf_dep}}")
+  set_property (TARGET ${GDKPixbuf} APPEND PROPERTY INTERFACE_LINK_LIBRARIES "${${gdkpixbuf_dep}}")
 endforeach(gdkpixbuf_dep)
 
 include(FindPackageHandleStandardArgs)

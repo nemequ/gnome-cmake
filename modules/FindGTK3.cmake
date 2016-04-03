@@ -30,6 +30,7 @@
 find_package(PkgConfig)
 
 set(GTK3_DEPS
+  GIO
   ATK
   GDK3
   Pango
@@ -40,11 +41,12 @@ if(PKG_CONFIG_FOUND)
   pkg_search_module(GTK3_PKG gtk+-3.0)
 endif()
 
-find_library(GTK3 gtk-3 HINTS ${GTK3_PKG_LIBRARY_DIRS})
+find_library(GTK3_LIBRARY gtk-3 HINTS ${GTK3_PKG_LIBRARY_DIRS})
+set(GTK3 gtk-3)
 
-if(GTK3)
-  add_library(gtk-3 SHARED IMPORTED)
-  set_property(TARGET gtk-3 PROPERTY IMPORTED_LOCATION "${GTK3}")
+if(GTK3_LIBRARY)
+  add_library(${GTK3} SHARED IMPORTED)
+  set_property(TARGET ${GTK3} PROPERTY IMPORTED_LOCATION "${GTK3_LIBRARY}")
 
   set(GTK3_INCLUDE_DIRS)
 
@@ -74,7 +76,7 @@ foreach(gtk3_dep ${GTK3_DEPS})
   list(APPEND GTK3_DEPS_FOUND_VARS "${gtk3_dep}_FOUND")
   list(APPEND GTK3_INCLUDE_DIRS ${${gtk3_dep}_INCLUDE_DIRS})
 
-  set_property (TARGET "gtk-3" APPEND PROPERTY INTERFACE_LINK_LIBRARIES "${${gtk3_dep}}")
+  set_property (TARGET "${GTK3}" APPEND PROPERTY INTERFACE_LINK_LIBRARIES "${${gtk3_dep}}")
 endforeach(gtk3_dep)
 
 include(FindPackageHandleStandardArgs)

@@ -36,11 +36,12 @@ if(PKG_CONFIG_FOUND)
   pkg_search_module(GDK3_PKG gdk-3.0)
 endif()
 
-find_library(GDK3 gdk-3 HINTS ${GDK3_PKG_LIBRARY_DIRS})
+find_library(GDK3_LIBRARY gdk-3 HINTS ${GDK3_PKG_LIBRARY_DIRS})
+set(GDK3 "gdk-3")
 
-if(GDK3)
-  add_library(gdk-3 SHARED IMPORTED)
-  set_property(TARGET gdk-3 PROPERTY IMPORTED_LOCATION "${GDK3}")
+if(GDK3_LIBRARY)
+  add_library(${GDK3} SHARED IMPORTED)
+  set_property(TARGET ${GDK3} PROPERTY IMPORTED_LOCATION "${GDK3_LIBRARY}")
 
   set(GDK3_INCLUDE_DIRS)
 
@@ -70,7 +71,7 @@ foreach(gdk3_dep ${GDK3_DEPS})
   list(APPEND GDK3_DEPS_FOUND_VARS "${gdk3_dep}_FOUND")
   list(APPEND GDK3_INCLUDE_DIRS ${${gdk3_dep}_INCLUDE_DIRS})
 
-  set_property (TARGET "gdk-3" APPEND PROPERTY INTERFACE_LINK_LIBRARIES "${${gdk3_dep}}")
+  set_property (TARGET ${GDK3} APPEND PROPERTY INTERFACE_LINK_LIBRARIES "${${gdk3_dep}}")
 endforeach(gdk3_dep)
 
 include(FindPackageHandleStandardArgs)

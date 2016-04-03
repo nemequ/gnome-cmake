@@ -30,17 +30,18 @@
 find_package(PkgConfig)
 
 set(Soup_DEPS
-  GLib)
+  GIO)
 
 if(PKG_CONFIG_FOUND)
   pkg_search_module(Soup_PKG libsoup-2.4)
 endif()
 
-find_library(Soup soup-2.4 HINTS ${Soup_PKG_LIBRARY_DIRS})
+find_library(Soup_LIBRARY soup-2.4 HINTS ${Soup_PKG_LIBRARY_DIRS})
+set(Soup soup-2.4)
 
-if(Soup AND NOT Soup_FOUND)
-  add_library(soup-2.4 SHARED IMPORTED)
-  set_property(TARGET soup-2.4 PROPERTY IMPORTED_LOCATION "${Soup}")
+if(Soup_LIBRARY AND NOT Soup_FOUND)
+  add_library(${Soup} SHARED IMPORTED)
+  set_property(TARGET ${Soup} PROPERTY IMPORTED_LOCATION "${Soup_LIBRARY}")
 
   find_path(Soup_INCLUDE_DIR "libsoup/soup.h"
     HINTS ${Soup_PKG_INCLUDE_DIRS})
@@ -68,7 +69,7 @@ foreach(soup_dep ${Soup_DEPS})
   list(APPEND Soup_DEPS_FOUND_VARS "${soup_dep}_FOUND")
   list(APPEND Soup_INCLUDE_DIRS ${${soup_dep}_INCLUDE_DIRS})
 
-  set_property (TARGET "soup-2.4" APPEND PROPERTY INTERFACE_LINK_LIBRARIES "${${soup_dep}}")
+  set_property (TARGET "${Soup}" APPEND PROPERTY INTERFACE_LINK_LIBRARIES "${${soup_dep}}")
 endforeach(soup_dep)
 
 include(FindPackageHandleStandardArgs)

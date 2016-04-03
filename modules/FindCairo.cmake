@@ -35,11 +35,12 @@ if(PKG_CONFIG_FOUND)
   pkg_search_module(Cairo_PKG cairo)
 endif()
 
-find_library(Cairo cairo HINTS ${Cairo_PKG_LIBRARY_DIRS})
+find_library(Cairo_LIBRARY cairo HINTS ${Cairo_PKG_LIBRARY_DIRS})
+set(Cairo cairo)
 
-if(Cairo)
-  add_library(cairo SHARED IMPORTED)
-  set_property(TARGET cairo PROPERTY IMPORTED_LOCATION "${Cairo}")
+if(Cairo_LIBRARY)
+  add_library(${Cairo} SHARED IMPORTED)
+  set_property(TARGET ${Cairo} PROPERTY IMPORTED_LOCATION "${Cairo_LIBRARY}")
 
   set(Cairo_INCLUDE_DIRS)
 
@@ -69,7 +70,7 @@ foreach(cairo_dep ${Cairo_DEPS})
   list(APPEND Cairo_DEPS_FOUND_VARS "${cairo_dep}_FOUND")
   list(APPEND Cairo_INCLUDE_DIRS ${${cairo_dep}_INCLUDE_DIRS})
 
-  set_property (TARGET cairo APPEND PROPERTY INTERFACE_LINK_LIBRARIES "${${cairo_dep}}")
+  set_property (TARGET ${Cairo} APPEND PROPERTY INTERFACE_LINK_LIBRARIES "${${cairo_dep}}")
 endforeach(cairo_dep)
 
 include(FindPackageHandleStandardArgs)

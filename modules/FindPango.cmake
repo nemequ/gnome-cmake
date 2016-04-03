@@ -36,11 +36,12 @@ if(PKG_CONFIG_FOUND)
   pkg_search_module(Pango_PKG pango)
 endif()
 
-find_library(Pango pango-1.0 HINTS ${Pango_PKG_LIBRARY_DIRS})
+find_library(Pango_LIBRARY pango-1.0 HINTS ${Pango_PKG_LIBRARY_DIRS})
+set(Pango pango-1.0)
 
-if(Pango AND NOT Pango_FOUND)
-  add_library(pango-1.0 SHARED IMPORTED)
-  set_property(TARGET pango-1.0 PROPERTY IMPORTED_LOCATION "${Pango}")
+if(Pango_LIBRARY AND NOT Pango_FOUND)
+  add_library(${Pango} SHARED IMPORTED)
+  set_property(TARGET ${Pango} PROPERTY IMPORTED_LOCATION "${Pango_LIBRARY}")
 
   find_path(Pango_INCLUDE_DIR "pango/pango.h"
     HINTS ${Pango_PKG_INCLUDE_DIRS})
@@ -68,7 +69,7 @@ foreach(pango_dep ${Pango_DEPS})
   list(APPEND Pango_DEPS_FOUND_VARS "${pango_dep}_FOUND")
   list(APPEND Pango_INCLUDE_DIRS ${${pango_dep}_INCLUDE_DIRS})
 
-  set_property (TARGET "pango-1.0" APPEND PROPERTY INTERFACE_LINK_LIBRARIES "${${pango_dep}}")
+  set_property (TARGET "${Pango}" APPEND PROPERTY INTERFACE_LINK_LIBRARIES "${${pango_dep}}")
 endforeach(pango_dep)
 
 include(FindPackageHandleStandardArgs)
