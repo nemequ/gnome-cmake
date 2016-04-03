@@ -41,6 +41,7 @@ set(Cairo cairo)
 if(Cairo_LIBRARY)
   add_library(${Cairo} SHARED IMPORTED)
   set_property(TARGET ${Cairo} PROPERTY IMPORTED_LOCATION "${Cairo_LIBRARY}")
+  set_property(TARGET ${Cairo} PROPERTY INTERFACE_COMPILE_OPTIONS "${Cairo_PKG_CFLAGS_OTHER}")
 
   set(Cairo_INCLUDE_DIRS)
 
@@ -60,6 +61,7 @@ if(Cairo_LIBRARY)
     unset(Cairo_VERSION_MICRO)
 
     list(APPEND Cairo_INCLUDE_DIRS ${Cairo_INCLUDE_DIR})
+    set_property(TARGET ${Cairo} PROPERTY INTERFACE_INCLUDE_DIRECTORIES "${Cairo_INCLUDE_DIR}")
   endif()
 endif()
 

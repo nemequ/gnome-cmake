@@ -38,7 +38,7 @@ set(GTK3_DEPS
   GDKPixbuf)
 
 if(PKG_CONFIG_FOUND)
-  pkg_search_module(GTK3_PKG gtk+-3.0)
+  pkg_search_module(GTK3_PKG QUIET gtk+-3.0)
 endif()
 
 find_library(GTK3_LIBRARY gtk-3 HINTS ${GTK3_PKG_LIBRARY_DIRS})
@@ -47,6 +47,7 @@ set(GTK3 gtk-3)
 if(GTK3_LIBRARY)
   add_library(${GTK3} SHARED IMPORTED)
   set_property(TARGET ${GTK3} PROPERTY IMPORTED_LOCATION "${GTK3_LIBRARY}")
+  set_property(TARGET ${GTK3} PROPERTY INTERFACE_COMPILE_OPTIONS "${GTK3_PKG_CFLAGS_OTHER}")
 
   set(GTK3_INCLUDE_DIRS)
 
@@ -66,6 +67,7 @@ if(GTK3_LIBRARY)
     unset(GTK3_MICRO_VERSION)
 
     list(APPEND GTK3_INCLUDE_DIRS ${GTK3_INCLUDE_DIR})
+    set_property(TARGET ${GTK3} PROPERTY INTERFACE_INCLUDE_DIRECTORIES "${GTK3_INCLUDE_DIR}")
   endif()
 endif()
 

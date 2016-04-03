@@ -42,6 +42,7 @@ set(GObject gobject-2.0)
 if(GObject_LIBRARY AND NOT GObject_FOUND)
   add_library(${GObject} SHARED IMPORTED)
   set_property(TARGET ${GObject} PROPERTY IMPORTED_LOCATION "${GObject_LIBRARY}")
+  set_property(TARGET ${GObject} PROPERTY INTERFACE_COMPILE_OPTIONS "${GObject_PKG_CFLAGS_OTHER}")
 
   find_path(GObject_INCLUDE_DIR "gobject/gobject.h"
     HINTS ${GObject_PKG_INCLUDE_DIRS})
@@ -51,6 +52,7 @@ if(GObject_LIBRARY AND NOT GObject_FOUND)
 
   list(APPEND GObject_DEPS_FOUND_VARS "GLib_FOUND")
   list(APPEND GObject_INCLUDE_DIRS ${GLib_INCLUDE_DIRS})
+  set_property(TARGET ${GObject} PROPERTY INTERFACE_INCLUDE_DIRECTORIES "${GObject_INCLUDE_DIR}")
 
   set_property (TARGET "${GObject}" APPEND PROPERTY INTERFACE_LINK_LIBRARIES "${GLib}")
 endif()

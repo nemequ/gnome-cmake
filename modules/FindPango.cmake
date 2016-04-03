@@ -42,6 +42,7 @@ set(Pango pango-1.0)
 if(Pango_LIBRARY AND NOT Pango_FOUND)
   add_library(${Pango} SHARED IMPORTED)
   set_property(TARGET ${Pango} PROPERTY IMPORTED_LOCATION "${Pango_LIBRARY}")
+  set_property(TARGET ${Pango} PROPERTY INTERFACE_COMPILE_OPTIONS "${Pango_PKG_CFLAGS_OTHER}")
 
   find_path(Pango_INCLUDE_DIR "pango/pango.h"
     HINTS ${Pango_PKG_INCLUDE_DIRS})
@@ -59,6 +60,7 @@ if(Pango_LIBRARY AND NOT Pango_FOUND)
     unset(Pango_MICRO_VERSION)
 
     list(APPEND Pango_INCLUDE_DIRS ${Pango_INCLUDE_DIR})
+    set_property(TARGET ${Pango} PROPERTY INTERFACE_INCLUDE_DIRECTORIES "${Pango_INCLUDE_DIR}")
   endif()
 endif()
 

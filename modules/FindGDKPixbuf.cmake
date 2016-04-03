@@ -42,6 +42,7 @@ set(GDKPixbuf "gdk_pixbuf-2.0")
 if(GDKPixbuf_LIBRARY)
   add_library(${GDKPixbuf} SHARED IMPORTED)
   set_property(TARGET ${GDKPixbuf} PROPERTY IMPORTED_LOCATION "${GDKPixbuf_LIBRARY}")
+  set_property(TARGET ${GDKPixbuf} PROPERTY INTERFACE_COMPILE_OPTIONS "${GDKPixbuf_PKG_CFLAGS_OTHER}")
 
   set(GDKPixbuf_INCLUDE_DIRS)
 
@@ -53,6 +54,7 @@ if(GDKPixbuf_LIBRARY)
     string(REGEX REPLACE "^#define GDKPIXBUF_VERSION \\\"([0-9]+)\\.([0-9]+)\\.([0-9]+)\\\"$" "\\1.\\2.\\3" GDKPixbuf_VERSION "${GDKPixbuf_VERSION}")
 
     list(APPEND GDKPixbuf_INCLUDE_DIRS ${GDKPixbuf_INCLUDE_DIR})
+    set_property(TARGET ${GDKPixbuf} PROPERTY INTERFACE_INCLUDE_DIRECTORIES "${GDKPixbuf_INCLUDE_DIR}")
   endif()
 endif()
 

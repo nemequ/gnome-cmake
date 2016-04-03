@@ -39,6 +39,7 @@ set(GLib glib-2.0)
 if(GLib_LIBRARY AND NOT GLib_FOUND)
   add_library(${GLib} SHARED IMPORTED)
   set_property(TARGET ${GLib} PROPERTY IMPORTED_LOCATION "${GLib_LIBRARY}")
+  set_property(TARGET ${GLib} PROPERTY INTERFACE_COMPILE_OPTIONS "${GLib_PKG_CFLAGS_OTHER}")
 
   find_path(GLib_INCLUDE_DIRS "glib.h"
     HINTS ${GLib_PKG_INCLUDE_DIRS}
@@ -69,6 +70,7 @@ if(GLib_LIBRARY AND NOT GLib_FOUND)
     unset(GLib_MICRO_VERSION)
 
     list(APPEND GLib_INCLUDE_DIRS ${GLib_CONFIG_INCLUDE_DIR})
+    set_property(TARGET ${GLib} PROPERTY INTERFACE_INCLUDE_DIRECTORIES "${GLib_INCLUDE_DIRS}")
   endif()
 endif()
 

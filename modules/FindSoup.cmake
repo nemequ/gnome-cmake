@@ -42,6 +42,7 @@ set(Soup soup-2.4)
 if(Soup_LIBRARY AND NOT Soup_FOUND)
   add_library(${Soup} SHARED IMPORTED)
   set_property(TARGET ${Soup} PROPERTY IMPORTED_LOCATION "${Soup_LIBRARY}")
+  set_property(TARGET ${Soup} PROPERTY INTERFACE_COMPILE_OPTIONS "${Soup_PKG_CFLAGS_OTHER}")
 
   find_path(Soup_INCLUDE_DIR "libsoup/soup.h"
     HINTS ${Soup_PKG_INCLUDE_DIRS})
@@ -59,6 +60,7 @@ if(Soup_LIBRARY AND NOT Soup_FOUND)
     unset(Soup_MICRO_VERSION)
 
     list(APPEND Soup_INCLUDE_DIRS ${Soup_INCLUDE_DIR})
+    set_property(TARGET ${Soup} PROPERTY INTERFACE_INCLUDE_DIRECTORIES "${Soup_INCLUDE_DIR}")
   endif()
 endif()
 
