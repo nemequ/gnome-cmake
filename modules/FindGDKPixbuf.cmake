@@ -29,53 +29,48 @@
 
 find_package(PkgConfig)
 
-set(GDKPIXBUF_DEPS
+set(GDKPixbuf_DEPS
   GLib)
 
 if(PKG_CONFIG_FOUND)
-  pkg_search_module(GDKPIXBUF_PKG gdk-pixbuf-2.0)
+  pkg_search_module(GDKPixbuf_PKG gdk-pixbuf-2.0)
 endif()
 
-find_library(GDKPIXBUF gdk_pixbuf-2.0 HINTS ${GDKPIXBUF_PKG_LIBRARY_DIRS})
+find_library(GDKPixbuf gdk_pixbuf-2.0 HINTS ${GDKPixbuf_PKG_LIBRARY_DIRS})
 
-if(GDKPIXBUF)
+if(GDKPixbuf)
   add_library(gdk_pixbuf-2.0 SHARED IMPORTED)
-  set_property(TARGET gdk_pixbuf-2.0 PROPERTY IMPORTED_LOCATION "${GDKPIXBUF}")
+  set_property(TARGET gdk_pixbuf-2.0 PROPERTY IMPORTED_LOCATION "${GDKPixbuf}")
 
-  set(GDKPIXBUF_INCLUDE_DIRS)
+  set(GDKPixbuf_INCLUDE_DIRS)
 
-  find_path(GDKPIXBUF_INCLUDE_DIR "gdk-pixbuf/gdk-pixbuf.h"
-    HINTS ${GDKPIXBUF_PKG_INCLUDE_DIRS})
+  find_path(GDKPixbuf_INCLUDE_DIR "gdk-pixbuf/gdk-pixbuf.h"
+    HINTS ${GDKPixbuf_PKG_INCLUDE_DIRS})
 
-  if(NOT GDKPIXBUF_INCLUDE_DIR)
-    unset(GDKPIXBUF_INCLUDE_DIR)
-  else()
-    file(STRINGS "${GDKPIXBUF_INCLUDE_DIR}/gdk-pixbuf/gdk-pixbuf-features.h" GDKPIXBUF_VERSION REGEX "^#define GDKPIXBUF_VERSION \\\"[^\\\"]+\\\"")
-    string(REGEX REPLACE "^#define GDKPIXBUF_VERSION \\\"([0-9]+)\\.([0-9]+)\\.([0-9]+)\\\"$" "\\1.\\2.\\3" GDKPIXBUF_VERSION "${GDKPIXBUF_VERSION}")
+  if(GDKPixbuf_INCLUDE_DIR)
+    file(STRINGS "${GDKPixbuf_INCLUDE_DIR}/gdk-pixbuf/gdk-pixbuf-features.h" GDKPixbuf_VERSION REGEX "^#define GDKPIXBUF_VERSION \\\"[^\\\"]+\\\"")
+    string(REGEX REPLACE "^#define GDKPIXBUF_VERSION \\\"([0-9]+)\\.([0-9]+)\\.([0-9]+)\\\"$" "\\1.\\2.\\3" GDKPixbuf_VERSION "${GDKPixbuf_VERSION}")
 
-    list(APPEND GDKPIXBUF_INCLUDE_DIRS ${GDKPIXBUF_INCLUDE_DIR})
+    list(APPEND GDKPixbuf_INCLUDE_DIRS ${GDKPixbuf_INCLUDE_DIR})
   endif()
 endif()
 
-set(GDKPIXBUF_DEPS_FOUND_VARS)
-foreach(gdkpixbuf_dep ${GDKPIXBUF_DEPS})
-  string(TOUPPER "${gdkpixbuf_dep}" gdkpixbuf_dep_uc)
+set(GDKPixbuf_DEPS_FOUND_VARS)
+foreach(gdkpixbuf_dep ${GDKPixbuf_DEPS})
   find_package(${gdkpixbuf_dep})
 
-  list(APPEND GDKPIXBUF_DEPS_FOUND_VARS "${gdkpixbuf_dep_uc}_FOUND")
-  list(APPEND GDKPIXBUF_INCLUDE_DIRS ${${gdkpixbuf_dep_uc}_INCLUDE_DIRS})
+  list(APPEND GDKPixbuf_DEPS_FOUND_VARS "${gdkpixbuf_dep}_FOUND")
+  list(APPEND GDKPixbuf_INCLUDE_DIRS ${${gdkpixbuf_dep}_INCLUDE_DIRS})
 
-  set_property (TARGET "gdk_pixbuf-2.0" APPEND PROPERTY INTERFACE_LINK_LIBRARIES "${${gdkpixbuf_dep_uc}}")
-
-  unset(gdkpixbuf_dep_uc)
+  set_property (TARGET "gdk_pixbuf-2.0" APPEND PROPERTY INTERFACE_LINK_LIBRARIES "${${gdkpixbuf_dep}}")
 endforeach(gdkpixbuf_dep)
 
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(GDKPIXBUF
+find_package_handle_standard_args(GDKPixbuf
     REQUIRED_VARS
-      GDKPIXBUF_INCLUDE_DIRS
-      ${GDKPIXBUF_DEPS_FOUND_VARS}
+      GDKPixbuf_INCLUDE_DIRS
+      ${GDKPixbuf_DEPS_FOUND_VARS}
     VERSION_VAR
-      GDKPIXBUF_VERSION)
+      GDKPixbuf_VERSION)
 
-unset(GDKPIXBUF_DEPS_FOUND_VARS)
+unset(GDKPixbuf_DEPS_FOUND_VARS)

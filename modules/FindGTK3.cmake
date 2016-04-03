@@ -51,9 +51,7 @@ if(GTK3)
   find_path(GTK3_INCLUDE_DIR "gtk/gtk.h"
     HINTS ${GTK3_PKG_INCLUDE_DIRS})
 
-  if(NOT GTK3_INCLUDE_DIR)
-    unset(GTK3_INCLUDE_DIR)
-  else()
+  if(GTK3_INCLUDE_DIR)
     file(STRINGS "${GTK3_INCLUDE_DIR}/gtk/gtkversion.h" GTK3_MAJOR_VERSION REGEX "^#define GTK_MAJOR_VERSION +\\(?([0-9]+)\\)?$")
     string(REGEX REPLACE "^#define GTK_MAJOR_VERSION \\(?([0-9]+)\\)?$" "\\1" GTK3_MAJOR_VERSION "${GTK3_MAJOR_VERSION}")
     file(STRINGS "${GTK3_INCLUDE_DIR}/gtk/gtkversion.h" GTK3_MINOR_VERSION REGEX "^#define GTK_MINOR_VERSION +\\(?([0-9]+)\\)?$")
@@ -71,15 +69,12 @@ endif()
 
 set(GTK3_DEPS_FOUND_VARS)
 foreach(gtk3_dep ${GTK3_DEPS})
-  string(TOUPPER "${gtk3_dep}" gtk3_dep_uc)
   find_package(${gtk3_dep})
 
-  list(APPEND GTK3_DEPS_FOUND_VARS "${gtk3_dep_uc}_FOUND")
-  list(APPEND GTK3_INCLUDE_DIRS ${${gtk3_dep_uc}_INCLUDE_DIRS})
+  list(APPEND GTK3_DEPS_FOUND_VARS "${gtk3_dep}_FOUND")
+  list(APPEND GTK3_INCLUDE_DIRS ${${gtk3_dep}_INCLUDE_DIRS})
 
-  set_property (TARGET "gtk-3" APPEND PROPERTY INTERFACE_LINK_LIBRARIES "${${gtk3_dep_uc}}")
-
-  unset(gtk3_dep_uc)
+  set_property (TARGET "gtk-3" APPEND PROPERTY INTERFACE_LINK_LIBRARIES "${${gtk3_dep}}")
 endforeach(gtk3_dep)
 
 include(FindPackageHandleStandardArgs)

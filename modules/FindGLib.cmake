@@ -30,68 +30,66 @@
 find_package(PkgConfig)
 
 if(PKG_CONFIG_FOUND)
-  pkg_search_module(GLIB_PKG    glib-2.0)
-  pkg_search_module(GOBJECT_PKG gobject-2.0)
+  pkg_search_module(GLib_PKG    glib-2.0)
+  pkg_search_module(GObject_PKG gobject-2.0)
   pkg_search_module(GIO_PKG     gio-2.0)
 endif()
 
-find_library(GLIB    glib-2.0    HINTS ${GLIB_PKG_LIBRARY_DIRS})
-find_library(GOBJECT gobject-2.0 HINTS ${GOBJECT_PKG_LIBRARY_DIRS})
+find_library(GLib    glib-2.0    HINTS ${GLib_PKG_LIBRARY_DIRS})
+find_library(GObject gobject-2.0 HINTS ${GObject_PKG_LIBRARY_DIRS})
 find_library(GIO     gio-2.0     HINTS ${GIO_PKG_LIBRARY_DIRS})
 
-if(GLIB AND NOT GLIB_FOUND)
+if(GLib AND NOT GLib_FOUND)
   add_library(glib-2.0 SHARED IMPORTED)
-  set_property(TARGET glib-2.0 PROPERTY IMPORTED_LOCATION "${GLIB}")
+  set_property(TARGET glib-2.0 PROPERTY IMPORTED_LOCATION "${GLib}")
 
-  find_path(GLIB_INCLUDE_DIRS "glib.h"
-    HINTS ${GLIB_PKG_INCLUDE_DIRS}
+  find_path(GLib_INCLUDE_DIRS "glib.h"
+    HINTS ${GLib_PKG_INCLUDE_DIRS}
     PATH_SUFFIXES "glib-2.0")
 
-  get_filename_component(GLIB_LIBDIR "${GLIB}" DIRECTORY)
-  find_path(GLIB_CONFIG_INCLUDE_DIR "glibconfig.h"
+  get_filename_component(GLib_LIBDIR "${GLib}" DIRECTORY)
+  find_path(GLib_CONFIG_INCLUDE_DIR "glibconfig.h"
     HINTS
-      ${GLIB_LIBDIR}
-      ${GLIB_PKG_INCLUDE_DIRS}
+      ${GLib_LIBDIR}
+      ${GLib_PKG_INCLUDE_DIRS}
     PATHS
       "${CMAKE_LIBRARY_PATH}"
     PATH_SUFFIXES
       "glib-2.0/include"
       "glib-2.0")
-  unset(GLIB_LIBDIR)
+  unset(GLib_LIBDIR)
 
-  if(NOT GLIB_CONFIG_INCLUDE_DIR)
-    unset(GLIB_INCLUDE_DIRS)
-  else()
-    file(STRINGS "${GLIB_CONFIG_INCLUDE_DIR}/glibconfig.h" GLIB_MAJOR_VERSION REGEX "^#define GLIB_MAJOR_VERSION +([0-9]+)")
-    string(REGEX REPLACE "^#define GLIB_MAJOR_VERSION ([0-9]+)$" "\\1" GLIB_MAJOR_VERSION "${GLIB_MAJOR_VERSION}")
-    file(STRINGS "${GLIB_CONFIG_INCLUDE_DIR}/glibconfig.h" GLIB_MINOR_VERSION REGEX "^#define GLIB_MINOR_VERSION +([0-9]+)")
-    string(REGEX REPLACE "^#define GLIB_MINOR_VERSION ([0-9]+)$" "\\1" GLIB_MINOR_VERSION "${GLIB_MINOR_VERSION}")
-    file(STRINGS "${GLIB_CONFIG_INCLUDE_DIR}/glibconfig.h" GLIB_MICRO_VERSION REGEX "^#define GLIB_MICRO_VERSION +([0-9]+)")
-    string(REGEX REPLACE "^#define GLIB_MICRO_VERSION ([0-9]+)$" "\\1" GLIB_MICRO_VERSION "${GLIB_MICRO_VERSION}")
-    set(GLIB_VERSION "${GLIB_MAJOR_VERSION}.${GLIB_MINOR_VERSION}.${GLIB_MICRO_VERSION}")
-    unset(GLIB_MAJOR_VERSION)
-    unset(GLIB_MINOR_VERSION)
-    unset(GLIB_MICRO_VERSION)
+  if(GLib_CONFIG_INCLUDE_DIR)
+    file(STRINGS "${GLib_CONFIG_INCLUDE_DIR}/glibconfig.h" GLib_MAJOR_VERSION REGEX "^#define GLIB_MAJOR_VERSION +([0-9]+)")
+    string(REGEX REPLACE "^#define GLIB_MAJOR_VERSION ([0-9]+)$" "\\1" GLib_MAJOR_VERSION "${GLib_MAJOR_VERSION}")
+    file(STRINGS "${GLib_CONFIG_INCLUDE_DIR}/glibconfig.h" GLib_MINOR_VERSION REGEX "^#define GLIB_MINOR_VERSION +([0-9]+)")
+    string(REGEX REPLACE "^#define GLIB_MINOR_VERSION ([0-9]+)$" "\\1" GLib_MINOR_VERSION "${GLib_MINOR_VERSION}")
+    file(STRINGS "${GLib_CONFIG_INCLUDE_DIR}/glibconfig.h" GLib_MICRO_VERSION REGEX "^#define GLIB_MICRO_VERSION +([0-9]+)")
+    string(REGEX REPLACE "^#define GLIB_MICRO_VERSION ([0-9]+)$" "\\1" GLib_MICRO_VERSION "${GLib_MICRO_VERSION}")
+    set(GLib_VERSION "${GLib_MAJOR_VERSION}.${GLib_MINOR_VERSION}.${GLib_MICRO_VERSION}")
+    unset(GLib_MAJOR_VERSION)
+    unset(GLib_MINOR_VERSION)
+    unset(GLib_MICRO_VERSION)
 
-    list(APPEND GLIB_INCLUDE_DIRS ${GLIB_CONFIG_INCLUDE_DIR})
+    list(APPEND GLib_INCLUDE_DIRS ${GLib_CONFIG_INCLUDE_DIR})
   endif()
 endif()
 
-if(GOBJECT AND NOT GLIB_FOUND)
+if(GObject AND NOT GLib_FOUND)
   add_library(gobject-2.0 SHARED IMPORTED)
-  set_property(TARGET gobject-2.0 PROPERTY IMPORTED_LOCATION "${GOBJECT}")
-  set_property (TARGET gobject-2.0 APPEND PROPERTY INTERFACE_LINK_LIBRARIES "${GLIB}")
+  set_property(TARGET gobject-2.0 PROPERTY IMPORTED_LOCATION "${GObject}")
+  set_property (TARGET gobject-2.0 APPEND PROPERTY INTERFACE_LINK_LIBRARIES "${GLib}")
 
-  find_path(GOBJECT_INCLUDE_DIRS "glib-object.h"
-    HINTS ${GOBJECT_PKG_INCLUDE_DIRS}
+  find_path(GObject_INCLUDE_DIRS "glib-object.h"
+    HINTS ${GObject_PKG_INCLUDE_DIRS}
     PATH_SUFFIXES "glib-2.0")
-  if(GOBJECT_INCLUDE_DIRS)
-    list(APPEND GOBJECT_INCLUDE_DIRS ${GLIB_INCLUDE_DIRS})
-    list(REMOVE_DUPLICATES GOBJECT_INCLUDE_DIRS)
+  if(GObject_INCLUDE_DIRS)
+    list(APPEND GObject_INCLUDE_DIRS ${GLib_INCLUDE_DIRS})
+    list(REMOVE_DUPLICATES GObject_INCLUDE_DIRS)
   endif()
 endif()
 
-if(GIO AND NOT GLIB_FOUND)
+if(GIO AND NOT GLib_FOUND)
   add_library(gio-2.0 SHARED IMPORTED)
   set_property(TARGET gio-2.0 PROPERTY IMPORTED_LOCATION "${GIO}")
   set_property (TARGET gobject-2.0 APPEND PROPERTY INTERFACE_LINK_LIBRARIES "${GIO}")
@@ -100,27 +98,27 @@ if(GIO AND NOT GLIB_FOUND)
     HINTS ${GIO_PKG_INCLUDE_DIRS}
     PATH_SUFFIXES "glib-2.0")
   if(GIO_INCLUDE_DIRS)
-    list(APPEND GIO_INCLUDE_DIRS ${GOBJECT_INCLUDE_DIRS})
+    list(APPEND GIO_INCLUDE_DIRS ${GObject_INCLUDE_DIRS})
     list(REMOVE_DUPLICATES GIO_INCLUDE_DIRS)
   endif()
 endif()
 
-find_program(GLIB_GENMARSHAL glib-genmarshal)
-if(GLIB_GENMARSHAL AND NOT GLIB_FOUND)
+find_program(GLib_GENMARSHAL glib-genmarshal)
+if(GLib_GENMARSHAL AND NOT GLib_FOUND)
   add_executable(glib-genmarshal IMPORTED)
-  set_property(TARGET glib-genmarshal PROPERTY IMPORTED_LOCATION "${GLIB_GENMARSHAL}")
+  set_property(TARGET glib-genmarshal PROPERTY IMPORTED_LOCATION "${GLib_GENMARSHAL}")
 endif()
 
-find_program(GLIB_MKENUMS glib-mkenums)
-if(GLIB_MKENUMS AND NOT GLIB_FOUND)
+find_program(GLib_MKENUMS glib-mkenums)
+if(GLib_MKENUMS AND NOT GLib_FOUND)
   add_executable(glib-mkenums IMPORTED)
-  set_property(TARGET glib-mkenums PROPERTY IMPORTED_LOCATION "${GLIB_MKENUMS}")
+  set_property(TARGET glib-mkenums PROPERTY IMPORTED_LOCATION "${GLib_MKENUMS}")
 endif()
 
-find_program(GLIB_COMPILE_SCHEMAS glib-compile-schemas)
-if(GLIB_COMPILE_SCHEMAS AND NOT GLIB_FOUND)
+find_program(GLib_COMPILE_SCHEMAS glib-compile-schemas)
+if(GLib_COMPILE_SCHEMAS AND NOT GLib_FOUND)
   add_executable(glib-compile-schemas IMPORTED)
-  set_property(TARGET glib-compile-schemas PROPERTY IMPORTED_LOCATION "${GLIB_COMPILE_SCHEMAS}")
+  set_property(TARGET glib-compile-schemas PROPERTY IMPORTED_LOCATION "${GLib_COMPILE_SCHEMAS}")
 endif()
 
 # glib_install_schemas(
@@ -163,37 +161,37 @@ function(glib_install_schemas)
     endif()
     install(FILES "${schema}"
       DESTINATION "${SCHEMADIR}")
-    install(CODE "execute_process(COMMAND \"${GLIB_COMPILE_SCHEMAS}\" \"${SCHEMADIR}\")")
+    install(CODE "execute_process(COMMAND \"${GLib_COMPILE_SCHEMAS}\" \"${SCHEMADIR}\")")
   endforeach()
 endfunction()
 
-find_program(GLIB_COMPILE_RESOURCES glib-compile-resources)
-if(GLIB_COMPILE_RESOURCES AND NOT GLIB_FOUND)
+find_program(GLib_COMPILE_RESOURCES glib-compile-resources)
+if(GLib_COMPILE_RESOURCES AND NOT GLib_FOUND)
   add_executable(glib-compile-resources IMPORTED)
-  set_property(TARGET glib-compile-resources PROPERTY IMPORTED_LOCATION "${GLIB_COMPILE_RESOURCES}")
+  set_property(TARGET glib-compile-resources PROPERTY IMPORTED_LOCATION "${GLib_COMPILE_RESOURCES}")
 endif()
 
 function(glib_compile_resources SPEC_FILE)
   set (options INTERNAL)
   set (oneValueArgs TARGET SOURCE_DIR HEADER SOURCE C_NAME)
   set (multiValueArgs)
-  cmake_parse_arguments(GLIB_COMPILE_RESOURCES "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+  cmake_parse_arguments(GLib_COMPILE_RESOURCES "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
   unset (options)
   unset (oneValueArgs)
   unset (multiValueArgs)
 
-  if(NOT GLIB_COMPILE_RESOURCES_SOURCE_DIR)
-    set(GLIB_COMPILE_RESOURCES_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
+  if(NOT GLib_COMPILE_RESOURCES_SOURCE_DIR)
+    set(GLib_COMPILE_RESOURCES_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
   endif()
 
   set(FLAGS)
 
-  if(GLIB_COMPILE_RESOURCES_INTERNAL)
+  if(GLib_COMPILE_RESOURCES_INTERNAL)
     list(APPEND FLAGS "--internal")
   endif()
 
-  if(GLIB_COMPILE_RESOURCES_C_NAME)
-    list(APPEND FLAGS "--c-name" "${GLIB_COMPILE_RESOURCES_C_NAME}")
+  if(GLib_COMPILE_RESOURCES_C_NAME)
+    list(APPEND FLAGS "--c-name" "${GLib_COMPILE_RESOURCES_C_NAME}")
   endif()
 
   get_filename_component(SPEC_FILE "${SPEC_FILE}" ABSOLUTE BASE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
@@ -201,36 +199,36 @@ function(glib_compile_resources SPEC_FILE)
   execute_process(
     COMMAND glib-compile-resources
       --generate-dependencies
-      --sourcedir "${GLIB_COMPILE_RESOURCES_SOURCE_DIR}"
+      --sourcedir "${GLib_COMPILE_RESOURCES_SOURCE_DIR}"
       "${SPEC_FILE}"
     OUTPUT_VARIABLE deps
     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
     OUTPUT_STRIP_TRAILING_WHITESPACE)
 
-  if(GLIB_COMPILE_RESOURCES_HEADER)
-    get_filename_component(GLIB_COMPILE_RESOURCES_HEADER "${GLIB_COMPILE_RESOURCES_HEADER}" ABSOLUTE BASE_DIR "${CMAKE_CURRENT_BINARY_DIR}")
+  if(GLib_COMPILE_RESOURCES_HEADER)
+    get_filename_component(GLib_COMPILE_RESOURCES_HEADER "${GLib_COMPILE_RESOURCES_HEADER}" ABSOLUTE BASE_DIR "${CMAKE_CURRENT_BINARY_DIR}")
 
     add_custom_command(
-      OUTPUT "${GLIB_COMPILE_RESOURCES_HEADER}"
+      OUTPUT "${GLib_COMPILE_RESOURCES_HEADER}"
       COMMAND glib-compile-resources
-        --sourcedir "${GLIB_COMPILE_RESOURCES_SOURCE_DIR}"
+        --sourcedir "${GLib_COMPILE_RESOURCES_SOURCE_DIR}"
         --generate-header
-        --target "${GLIB_COMPILE_RESOURCES_HEADER}"
+        --target "${GLib_COMPILE_RESOURCES_HEADER}"
         ${FLAGS}
         "${SPEC_FILE}"
       DEPENDS "${SPEC_FILE}" ${deps}
       WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
   endif()
 
-  if(GLIB_COMPILE_RESOURCES_SOURCE)
-    get_filename_component(GLIB_COMPILE_RESOURCES_SOURCE "${GLIB_COMPILE_RESOURCES_SOURCE}" ABSOLUTE BASE_DIR "${CMAKE_CURRENT_BINARY_DIR}")
+  if(GLib_COMPILE_RESOURCES_SOURCE)
+    get_filename_component(GLib_COMPILE_RESOURCES_SOURCE "${GLib_COMPILE_RESOURCES_SOURCE}" ABSOLUTE BASE_DIR "${CMAKE_CURRENT_BINARY_DIR}")
 
     add_custom_command(
-      OUTPUT "${GLIB_COMPILE_RESOURCES_SOURCE}"
+      OUTPUT "${GLib_COMPILE_RESOURCES_SOURCE}"
       COMMAND glib-compile-resources
-        --sourcedir "${GLIB_COMPILE_RESOURCES_SOURCE_DIR}"
+        --sourcedir "${GLib_COMPILE_RESOURCES_SOURCE_DIR}"
         --generate-source
-        --target "${GLIB_COMPILE_RESOURCES_SOURCE}"
+        --target "${GLib_COMPILE_RESOURCES_SOURCE}"
         ${FLAGS}
         "${SPEC_FILE}"
       DEPENDS "${SPEC_FILE}" ${deps}
@@ -239,7 +237,7 @@ function(glib_compile_resources SPEC_FILE)
 endfunction()
 
 find_program(GDBUS_CODEGEN gdbus-codegen)
-if(GDBUS_CODEGEN AND NOT GLIB_FOUND)
+if(GDBUS_CODEGEN AND NOT GLib_FOUND)
   add_executable(gdbus-codegen IMPORTED)
   set_property(TARGET gdbus-codegen PROPERTY IMPORTED_LOCATION "${GDBUS_CODEGEN}")
 endif()
@@ -247,13 +245,13 @@ endif()
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(GLib
     REQUIRED_VARS
-      GLIB_INCLUDE_DIRS
-      GOBJECT_INCLUDE_DIRS
+      GLib_INCLUDE_DIRS
+      GObject_INCLUDE_DIRS
       GIO_INCLUDE_DIRS
-      GLIB_MKENUMS
-      GLIB_GENMARSHAL
-      GLIB_COMPILE_SCHEMAS
-      GLIB_COMPILE_RESOURCES
+      GLib_MKENUMS
+      GLib_GENMARSHAL
+      GLib_COMPILE_SCHEMAS
+      GLib_COMPILE_RESOURCES
       GDBUS_CODEGEN
     VERSION_VAR
-      GLIB_VERSION)
+      GLib_VERSION)

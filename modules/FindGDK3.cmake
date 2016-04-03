@@ -47,9 +47,7 @@ if(GDK3)
   find_path(GDK3_INCLUDE_DIR "gdk/gdk.h"
     HINTS ${GDK3_PKG_INCLUDE_DIRS})
 
-  if(NOT GDK3_INCLUDE_DIR)
-    unset(GDK3_INCLUDE_DIR)
-  else()
+  if(GDK3_INCLUDE_DIR)
     file(STRINGS "${GDK3_INCLUDE_DIR}/gdk/gdkversionmacros.h" GDK3_MAJOR_VERSION REGEX "^#define GDK_MAJOR_VERSION +\\(?([0-9]+)\\)?$")
     string(REGEX REPLACE "^#define GDK_MAJOR_VERSION \\(?([0-9]+)\\)?$" "\\1" GDK3_MAJOR_VERSION "${GDK3_MAJOR_VERSION}")
     file(STRINGS "${GDK3_INCLUDE_DIR}/gdk/gdkversionmacros.h" GDK3_MINOR_VERSION REGEX "^#define GDK_MINOR_VERSION +\\(?([0-9]+)\\)?$")
@@ -67,15 +65,12 @@ endif()
 
 set(GDK3_DEPS_FOUND_VARS)
 foreach(gdk3_dep ${GDK3_DEPS})
-  string(TOUPPER "${gdk3_dep}" gdk3_dep_uc)
   find_package(${gdk3_dep})
 
-  list(APPEND GDK3_DEPS_FOUND_VARS "${gdk3_dep_uc}_FOUND")
-  list(APPEND GDK3_INCLUDE_DIRS ${${gdk3_dep_uc}_INCLUDE_DIRS})
+  list(APPEND GDK3_DEPS_FOUND_VARS "${gdk3_dep}_FOUND")
+  list(APPEND GDK3_INCLUDE_DIRS ${${gdk3_dep}_INCLUDE_DIRS})
 
-  set_property (TARGET "gdk-3" APPEND PROPERTY INTERFACE_LINK_LIBRARIES "${${gdk3_dep_uc}}")
-
-  unset(gdk3_dep_uc)
+  set_property (TARGET "gdk-3" APPEND PROPERTY INTERFACE_LINK_LIBRARIES "${${gdk3_dep}}")
 endforeach(gdk3_dep)
 
 include(FindPackageHandleStandardArgs)

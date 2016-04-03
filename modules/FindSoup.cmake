@@ -29,59 +29,54 @@
 
 find_package(PkgConfig)
 
-set(SOUP_DEPS
+set(Soup_DEPS
   GLib)
 
 if(PKG_CONFIG_FOUND)
-  pkg_search_module(SOUP_PKG libsoup-2.4)
+  pkg_search_module(Soup_PKG libsoup-2.4)
 endif()
 
-find_library(SOUP soup-2.4 HINTS ${SOUP_PKG_LIBRARY_DIRS})
+find_library(Soup soup-2.4 HINTS ${Soup_PKG_LIBRARY_DIRS})
 
-if(SOUP AND NOT SOUP_FOUND)
+if(Soup AND NOT Soup_FOUND)
   add_library(soup-2.4 SHARED IMPORTED)
-  set_property(TARGET soup-2.4 PROPERTY IMPORTED_LOCATION "${SOUP}")
+  set_property(TARGET soup-2.4 PROPERTY IMPORTED_LOCATION "${Soup}")
 
-  find_path(SOUP_INCLUDE_DIR "libsoup/soup.h"
-    HINTS ${SOUP_PKG_INCLUDE_DIRS})
+  find_path(Soup_INCLUDE_DIR "libsoup/soup.h"
+    HINTS ${Soup_PKG_INCLUDE_DIRS})
 
-  if(NOT SOUP_INCLUDE_DIR)
-    unset(SOUP_INCLUDE_DIR)
-  else()
-    file(STRINGS "${SOUP_INCLUDE_DIR}/libsoup/soup-version.h" SOUP_MAJOR_VERSION REGEX "^#define SOUP_MAJOR_VERSION +\\(?([0-9]+)\\)?$")
-    string(REGEX REPLACE "^#define SOUP_MAJOR_VERSION \\(([0-9]+)\\)$" "\\1" SOUP_MAJOR_VERSION "${SOUP_MAJOR_VERSION}")
-    file(STRINGS "${SOUP_INCLUDE_DIR}/libsoup/soup-version.h" SOUP_MINOR_VERSION REGEX "^#define SOUP_MINOR_VERSION +\\(?([0-9]+)\\)?$")
-    string(REGEX REPLACE "^#define SOUP_MINOR_VERSION \\(([0-9]+)\\)$" "\\1" SOUP_MINOR_VERSION "${SOUP_MINOR_VERSION}")
-    file(STRINGS "${SOUP_INCLUDE_DIR}/libsoup/soup-version.h" SOUP_MICRO_VERSION REGEX "^#define SOUP_MICRO_VERSION +\\(?([0-9]+)\\)?$")
-    string(REGEX REPLACE "^#define SOUP_MICRO_VERSION \\(([0-9]+)\\)$" "\\1" SOUP_MICRO_VERSION "${SOUP_MICRO_VERSION}")
-    set(SOUP_VERSION "${SOUP_MAJOR_VERSION}.${SOUP_MINOR_VERSION}.${SOUP_MICRO_VERSION}")
-    unset(SOUP_MAJOR_VERSION)
-    unset(SOUP_MINOR_VERSION)
-    unset(SOUP_MICRO_VERSION)
+  if(Soup_INCLUDE_DIR)
+    file(STRINGS "${Soup_INCLUDE_DIR}/libsoup/soup-version.h" Soup_MAJOR_VERSION REGEX "^#define SOUP_MAJOR_VERSION +\\(?([0-9]+)\\)?$")
+    string(REGEX REPLACE "^#define SOUP_MAJOR_VERSION \\(([0-9]+)\\)$" "\\1" Soup_MAJOR_VERSION "${Soup_MAJOR_VERSION}")
+    file(STRINGS "${Soup_INCLUDE_DIR}/libsoup/soup-version.h" Soup_MINOR_VERSION REGEX "^#define SOUP_MINOR_VERSION +\\(?([0-9]+)\\)?$")
+    string(REGEX REPLACE "^#define SOUP_MINOR_VERSION \\(([0-9]+)\\)$" "\\1" Soup_MINOR_VERSION "${Soup_MINOR_VERSION}")
+    file(STRINGS "${Soup_INCLUDE_DIR}/libsoup/soup-version.h" Soup_MICRO_VERSION REGEX "^#define SOUP_MICRO_VERSION +\\(?([0-9]+)\\)?$")
+    string(REGEX REPLACE "^#define SOUP_MICRO_VERSION \\(([0-9]+)\\)$" "\\1" Soup_MICRO_VERSION "${Soup_MICRO_VERSION}")
+    set(Soup_VERSION "${Soup_MAJOR_VERSION}.${Soup_MINOR_VERSION}.${Soup_MICRO_VERSION}")
+    unset(Soup_MAJOR_VERSION)
+    unset(Soup_MINOR_VERSION)
+    unset(Soup_MICRO_VERSION)
 
-    list(APPEND SOUP_INCLUDE_DIRS ${SOUP_INCLUDE_DIR})
+    list(APPEND Soup_INCLUDE_DIRS ${Soup_INCLUDE_DIR})
   endif()
 endif()
 
-set(SOUP_DEPS_FOUND_VARS)
-foreach(soup_dep ${SOUP_DEPS})
-  string(TOUPPER "${soup_dep}" soup_dep_uc)
+set(Soup_DEPS_FOUND_VARS)
+foreach(soup_dep ${Soup_DEPS})
   find_package(${soup_dep})
 
-  list(APPEND SOUP_DEPS_FOUND_VARS "${soup_dep_uc}_FOUND")
-  list(APPEND SOUP_INCLUDE_DIRS ${${soup_dep_uc}_INCLUDE_DIRS})
+  list(APPEND Soup_DEPS_FOUND_VARS "${soup_dep}_FOUND")
+  list(APPEND Soup_INCLUDE_DIRS ${${soup_dep}_INCLUDE_DIRS})
 
-  set_property (TARGET "soup-2.4" APPEND PROPERTY INTERFACE_LINK_LIBRARIES "${${soup_dep_uc}}")
-
-  unset(soup_dep_uc)
+  set_property (TARGET "soup-2.4" APPEND PROPERTY INTERFACE_LINK_LIBRARIES "${${soup_dep}}")
 endforeach(soup_dep)
 
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(SOUP
+find_package_handle_standard_args(Soup
     REQUIRED_VARS
-      SOUP_INCLUDE_DIRS
-      ${SOUP_DEPS_FOUND_VARS}
+      Soup_INCLUDE_DIRS
+      ${Soup_DEPS_FOUND_VARS}
     VERSION_VAR
-      SOUP_VERSION)
+      Soup_VERSION)
 
-unset(SOUP_DEPS_FOUND_VARS)
+unset(Soup_DEPS_FOUND_VARS)

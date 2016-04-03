@@ -45,9 +45,7 @@ if(ATK AND NOT ATK_FOUND)
   find_path(ATK_INCLUDE_DIR "atk/atk.h"
     HINTS ${ATK_PKG_INCLUDE_DIRS})
 
-  if(NOT ATK_INCLUDE_DIR)
-    unset(ATK_INCLUDE_DIR)
-  else()
+  if(ATK_INCLUDE_DIR)
     file(STRINGS "${ATK_INCLUDE_DIR}/atk/atkversion.h" ATK_MAJOR_VERSION REGEX "^#define ATK_MAJOR_VERSION +\\(?([0-9]+)\\)?$")
     string(REGEX REPLACE "^#define ATK_MAJOR_VERSION \\(([0-9]+)\\)$" "\\1" ATK_MAJOR_VERSION "${ATK_MAJOR_VERSION}")
     file(STRINGS "${ATK_INCLUDE_DIR}/atk/atkversion.h" ATK_MINOR_VERSION REGEX "^#define ATK_MINOR_VERSION +\\(?([0-9]+)\\)?$")
@@ -65,15 +63,12 @@ endif()
 
 set(ATK_DEPS_FOUND_VARS)
 foreach(atk_dep ${ATK_DEPS})
-  string(TOUPPER "${atk_dep}" atk_dep_uc)
   find_package(${atk_dep})
 
-  list(APPEND ATK_DEPS_FOUND_VARS "${atk_dep_uc}_FOUND")
-  list(APPEND ATK_INCLUDE_DIRS ${${atk_dep_uc}_INCLUDE_DIRS})
+  list(APPEND ATK_DEPS_FOUND_VARS "${atk_dep}_FOUND")
+  list(APPEND ATK_INCLUDE_DIRS ${${atk_dep}_INCLUDE_DIRS})
 
-  set_property (TARGET "atk-1.0" APPEND PROPERTY INTERFACE_LINK_LIBRARIES "${${atk_dep_uc}}")
-
-  unset(atk_dep_uc)
+  set_property (TARGET "atk-1.0" APPEND PROPERTY INTERFACE_LINK_LIBRARIES "${${atk_dep}}")
 endforeach(atk_dep)
 
 include(FindPackageHandleStandardArgs)

@@ -29,59 +29,54 @@
 
 find_package(PkgConfig)
 
-set(PANGO_DEPS
+set(Pango_DEPS
   GLib)
 
 if(PKG_CONFIG_FOUND)
-  pkg_search_module(PANGO_PKG pango)
+  pkg_search_module(Pango_PKG pango)
 endif()
 
-find_library(PANGO pango-1.0 HINTS ${PANGO_PKG_LIBRARY_DIRS})
+find_library(Pango pango-1.0 HINTS ${Pango_PKG_LIBRARY_DIRS})
 
-if(PANGO AND NOT PANGO_FOUND)
+if(Pango AND NOT Pango_FOUND)
   add_library(pango-1.0 SHARED IMPORTED)
-  set_property(TARGET pango-1.0 PROPERTY IMPORTED_LOCATION "${PANGO}")
+  set_property(TARGET pango-1.0 PROPERTY IMPORTED_LOCATION "${Pango}")
 
-  find_path(PANGO_INCLUDE_DIR "pango/pango.h"
-    HINTS ${PANGO_PKG_INCLUDE_DIRS})
+  find_path(Pango_INCLUDE_DIR "pango/pango.h"
+    HINTS ${Pango_PKG_INCLUDE_DIRS})
 
-  if(NOT PANGO_INCLUDE_DIR)
-    unset(PANGO_INCLUDE_DIR)
-  else()
-    file(STRINGS "${PANGO_INCLUDE_DIR}/pango/pango-features.h" PANGO_MAJOR_VERSION REGEX "^#define PANGO_MAJOR_VERSION +\\(?([0-9]+)\\)?$")
-    string(REGEX REPLACE "^#define PANGO_MAJOR_VERSION \\(([0-9]+)\\)$" "\\1" PANGO_MAJOR_VERSION "${PANGO_MAJOR_VERSION}")
-    file(STRINGS "${PANGO_INCLUDE_DIR}/pango/pango-features.h" PANGO_MINOR_VERSION REGEX "^#define PANGO_MINOR_VERSION +\\(?([0-9]+)\\)?$")
-    string(REGEX REPLACE "^#define PANGO_MINOR_VERSION \\(([0-9]+)\\)$" "\\1" PANGO_MINOR_VERSION "${PANGO_MINOR_VERSION}")
-    file(STRINGS "${PANGO_INCLUDE_DIR}/pango/pango-features.h" PANGO_MICRO_VERSION REGEX "^#define PANGO_MICRO_VERSION +\\(?([0-9]+)\\)?$")
-    string(REGEX REPLACE "^#define PANGO_MICRO_VERSION \\(([0-9]+)\\)$" "\\1" PANGO_MICRO_VERSION "${PANGO_MICRO_VERSION}")
-    set(PANGO_VERSION "${PANGO_MAJOR_VERSION}.${PANGO_MINOR_VERSION}.${PANGO_MICRO_VERSION}")
-    unset(PANGO_MAJOR_VERSION)
-    unset(PANGO_MINOR_VERSION)
-    unset(PANGO_MICRO_VERSION)
+  if(Pango_INCLUDE_DIR)
+    file(STRINGS "${Pango_INCLUDE_DIR}/pango/pango-features.h" Pango_MAJOR_VERSION REGEX "^#define PANGO_MAJOR_VERSION +\\(?([0-9]+)\\)?$")
+    string(REGEX REPLACE "^#define PANGO_MAJOR_VERSION \\(([0-9]+)\\)$" "\\1" Pango_MAJOR_VERSION "${Pango_MAJOR_VERSION}")
+    file(STRINGS "${Pango_INCLUDE_DIR}/pango/pango-features.h" Pango_MINOR_VERSION REGEX "^#define PANGO_MINOR_VERSION +\\(?([0-9]+)\\)?$")
+    string(REGEX REPLACE "^#define PANGO_MINOR_VERSION \\(([0-9]+)\\)$" "\\1" Pango_MINOR_VERSION "${Pango_MINOR_VERSION}")
+    file(STRINGS "${Pango_INCLUDE_DIR}/pango/pango-features.h" Pango_MICRO_VERSION REGEX "^#define PANGO_MICRO_VERSION +\\(?([0-9]+)\\)?$")
+    string(REGEX REPLACE "^#define PANGO_MICRO_VERSION \\(([0-9]+)\\)$" "\\1" Pango_MICRO_VERSION "${Pango_MICRO_VERSION}")
+    set(Pango_VERSION "${Pango_MAJOR_VERSION}.${Pango_MINOR_VERSION}.${Pango_MICRO_VERSION}")
+    unset(Pango_MAJOR_VERSION)
+    unset(Pango_MINOR_VERSION)
+    unset(Pango_MICRO_VERSION)
 
-    list(APPEND PANGO_INCLUDE_DIRS ${PANGO_INCLUDE_DIR})
+    list(APPEND Pango_INCLUDE_DIRS ${Pango_INCLUDE_DIR})
   endif()
 endif()
 
-set(PANGO_DEPS_FOUND_VARS)
-foreach(pango_dep ${PANGO_DEPS})
-  string(TOUPPER "${pango_dep}" pango_dep_uc)
+set(Pango_DEPS_FOUND_VARS)
+foreach(pango_dep ${Pango_DEPS})
   find_package(${pango_dep})
 
-  list(APPEND PANGO_DEPS_FOUND_VARS "${pango_dep_uc}_FOUND")
-  list(APPEND PANGO_INCLUDE_DIRS ${${pango_dep_uc}_INCLUDE_DIRS})
+  list(APPEND Pango_DEPS_FOUND_VARS "${pango_dep}_FOUND")
+  list(APPEND Pango_INCLUDE_DIRS ${${pango_dep}_INCLUDE_DIRS})
 
-  set_property (TARGET "pango-1.0" APPEND PROPERTY INTERFACE_LINK_LIBRARIES "${${pango_dep_uc}}")
-
-  unset(pango_dep_uc)
+  set_property (TARGET "pango-1.0" APPEND PROPERTY INTERFACE_LINK_LIBRARIES "${${pango_dep}}")
 endforeach(pango_dep)
 
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(PANGO
+find_package_handle_standard_args(Pango
     REQUIRED_VARS
-      PANGO_INCLUDE_DIRS
-      ${PANGO_DEPS_FOUND_VARS}
+      Pango_INCLUDE_DIRS
+      ${Pango_DEPS_FOUND_VARS}
     VERSION_VAR
-      PANGO_VERSION)
+      Pango_VERSION)
 
-unset(PANGO_DEPS_FOUND_VARS)
+unset(Pango_DEPS_FOUND_VARS)
