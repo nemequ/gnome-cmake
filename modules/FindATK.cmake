@@ -71,6 +71,8 @@ foreach(atk_dep ${ATK_DEPS})
   list(APPEND ATK_DEPS_FOUND_VARS "${atk_dep_uc}_FOUND")
   list(APPEND ATK_INCLUDE_DIRS ${${atk_dep_uc}_INCLUDE_DIRS})
 
+  set_property (TARGET "atk-1.0" APPEND PROPERTY INTERFACE_LINK_LIBRARIES "${${atk_dep_uc}}")
+
   unset(atk_dep_uc)
 endforeach(atk_dep)
 

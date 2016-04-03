@@ -73,6 +73,8 @@ foreach(gdk3_dep ${GDK3_DEPS})
   list(APPEND GDK3_DEPS_FOUND_VARS "${gdk3_dep_uc}_FOUND")
   list(APPEND GDK3_INCLUDE_DIRS ${${gdk3_dep_uc}_INCLUDE_DIRS})
 
+  set_property (TARGET "gdk-3" APPEND PROPERTY INTERFACE_LINK_LIBRARIES "${${gdk3_dep_uc}}")
+
   unset(gdk3_dep_uc)
 endforeach(gdk3_dep)
 

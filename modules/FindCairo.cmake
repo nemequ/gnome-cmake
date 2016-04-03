@@ -72,6 +72,8 @@ foreach(cairo_dep ${CAIRO_DEPS})
   list(APPEND CAIRO_DEPS_FOUND_VARS "${cairo_dep_uc}_FOUND")
   list(APPEND CAIRO_INCLUDE_DIRS ${${cairo_dep_uc}_INCLUDE_DIRS})
 
+  set_property (TARGET cairo APPEND PROPERTY INTERFACE_LINK_LIBRARIES "${${cairo_dep_uc}}")
+
   unset(cairo_dep_uc)
 endforeach(cairo_dep)
 

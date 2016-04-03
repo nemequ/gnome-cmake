@@ -65,6 +65,8 @@ foreach(gdkpixbuf_dep ${GDKPIXBUF_DEPS})
   list(APPEND GDKPIXBUF_DEPS_FOUND_VARS "${gdkpixbuf_dep_uc}_FOUND")
   list(APPEND GDKPIXBUF_INCLUDE_DIRS ${${gdkpixbuf_dep_uc}_INCLUDE_DIRS})
 
+  set_property (TARGET "gdk_pixbuf-2.0" APPEND PROPERTY INTERFACE_LINK_LIBRARIES "${${gdkpixbuf_dep_uc}}")
+
   unset(gdkpixbuf_dep_uc)
 endforeach(gdkpixbuf_dep)
 

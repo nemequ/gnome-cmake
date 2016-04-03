@@ -39,8 +39,8 @@ endif()
 find_library(PANGO pango-1.0 HINTS ${PANGO_PKG_LIBRARY_DIRS})
 
 if(PANGO AND NOT PANGO_FOUND)
-  add_library(pango SHARED IMPORTED)
-  set_property(TARGET pango PROPERTY IMPORTED_LOCATION "${PANGO}")
+  add_library(pango-1.0 SHARED IMPORTED)
+  set_property(TARGET pango-1.0 PROPERTY IMPORTED_LOCATION "${PANGO}")
 
   find_path(PANGO_INCLUDE_DIR "pango/pango.h"
     HINTS ${PANGO_PKG_INCLUDE_DIRS})
@@ -70,6 +70,8 @@ foreach(pango_dep ${PANGO_DEPS})
 
   list(APPEND PANGO_DEPS_FOUND_VARS "${pango_dep_uc}_FOUND")
   list(APPEND PANGO_INCLUDE_DIRS ${${pango_dep_uc}_INCLUDE_DIRS})
+
+  set_property (TARGET "pango-1.0" APPEND PROPERTY INTERFACE_LINK_LIBRARIES "${${pango_dep_uc}}")
 
   unset(pango_dep_uc)
 endforeach(pango_dep)

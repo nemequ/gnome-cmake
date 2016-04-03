@@ -77,6 +77,8 @@ foreach(gtk3_dep ${GTK3_DEPS})
   list(APPEND GTK3_DEPS_FOUND_VARS "${gtk3_dep_uc}_FOUND")
   list(APPEND GTK3_INCLUDE_DIRS ${${gtk3_dep_uc}_INCLUDE_DIRS})
 
+  set_property (TARGET "gtk-3" APPEND PROPERTY INTERFACE_LINK_LIBRARIES "${${gtk3_dep_uc}}")
+
   unset(gtk3_dep_uc)
 endforeach(gtk3_dep)
 

@@ -39,8 +39,8 @@ endif()
 find_library(SOUP soup-2.4 HINTS ${SOUP_PKG_LIBRARY_DIRS})
 
 if(SOUP AND NOT SOUP_FOUND)
-  add_library(libsoup-2.4 SHARED IMPORTED)
-  set_property(TARGET libsoup-2.4 PROPERTY IMPORTED_LOCATION "${SOUP}")
+  add_library(soup-2.4 SHARED IMPORTED)
+  set_property(TARGET soup-2.4 PROPERTY IMPORTED_LOCATION "${SOUP}")
 
   find_path(SOUP_INCLUDE_DIR "libsoup/soup.h"
     HINTS ${SOUP_PKG_INCLUDE_DIRS})
@@ -70,6 +70,8 @@ foreach(soup_dep ${SOUP_DEPS})
 
   list(APPEND SOUP_DEPS_FOUND_VARS "${soup_dep_uc}_FOUND")
   list(APPEND SOUP_INCLUDE_DIRS ${${soup_dep_uc}_INCLUDE_DIRS})
+
+  set_property (TARGET "soup-2.4" APPEND PROPERTY INTERFACE_LINK_LIBRARIES "${${soup_dep_uc}}")
 
   unset(soup_dep_uc)
 endforeach(soup_dep)

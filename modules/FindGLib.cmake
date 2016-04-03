@@ -80,6 +80,7 @@ endif()
 if(GOBJECT AND NOT GLIB_FOUND)
   add_library(gobject-2.0 SHARED IMPORTED)
   set_property(TARGET gobject-2.0 PROPERTY IMPORTED_LOCATION "${GOBJECT}")
+  set_property (TARGET gobject-2.0 APPEND PROPERTY INTERFACE_LINK_LIBRARIES "${GLIB}")
 
   find_path(GOBJECT_INCLUDE_DIRS "glib-object.h"
     HINTS ${GOBJECT_PKG_INCLUDE_DIRS}
@@ -93,6 +94,7 @@ endif()
 if(GIO AND NOT GLIB_FOUND)
   add_library(gio-2.0 SHARED IMPORTED)
   set_property(TARGET gio-2.0 PROPERTY IMPORTED_LOCATION "${GIO}")
+  set_property (TARGET gobject-2.0 APPEND PROPERTY INTERFACE_LINK_LIBRARIES "${GIO}")
 
   find_path(GIO_INCLUDE_DIRS "gio/gio.h"
     HINTS ${GIO_PKG_INCLUDE_DIRS}
